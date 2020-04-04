@@ -15,6 +15,7 @@ services:
     command:
       # API settings
       - --api.dashboard=true
+      - --api.insecure=true
       # Log Settings
       #- --log.level=DEBUG # <== Setting the level of the logs from traefik
       # Provider Settings
