@@ -50,7 +50,7 @@ services:
     image: postgres:latest
     restart: always
     volumes:
-      - ./nextcloud_db/data:/var/lib/postgresql/data
+      - ./nextcloud_db:/var/lib/postgresql/data
     networks:
       - backend
     environment:
@@ -108,9 +108,12 @@ services:
   redis:
     container_name: redis
     image: redis:latest
+    command: ["redis-server", "--appendonly", "yes"]
     restart: always
     networks:
       - backend
+    volumes:
+      - ./redis:/data
     labels:
     - traefik.enable=false
 
