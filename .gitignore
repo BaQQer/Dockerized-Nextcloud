@@ -1,0 +1,4 @@
+nextcloud_app
+nextcloud_db
+.env
+traefik/letsencrypt/*
