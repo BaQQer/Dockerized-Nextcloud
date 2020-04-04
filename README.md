@@ -25,8 +25,9 @@ Run docker-compose:
 
     docker-compose up -d
 
-Wait for nextcloud_app to initialize the database - this might take a few minutes. You can see the progress using "*sudo docker logs nextcloud_app*":
+Wait for nextcloud_app to initialize the database - this might take a few minutes. You can see the progress using "*docker logs -f nextcloud_app*":
 
+    $ docker logs -f nextcloud_app
     Configuring Redis as session handler
     Initializing nextcloud 18.0.3.0 ...
     Initializing finished
