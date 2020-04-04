@@ -1,6 +1,9 @@
 
 # Dockerized-Nextcloud
 Dockerized Nextcloud instance with PostgreSQL, Redis and Traefik with minimum setup required. 
+
+Please note that three directories, nextcloud_app, nextcloud_db and redis, are created, which contain the Nextcloud data, the database and the redis cache.
+
 ## Requirements
 
  - Docker-compose ([https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/))
@@ -52,3 +55,4 @@ Toggling Nextcloud maintenance mode:
 
     docker exec -it --user www-data nextcloud_app php occ maintenance:mode --on
     docker exec -it --user www-data nextcloud_app php occ maintenance:mode --off
+
