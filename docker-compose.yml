@@ -108,12 +108,9 @@ services:
   redis:
     container_name: redis
     image: redis:latest
-    command: ["redis-server", "--appendonly", "yes"]
     restart: always
     networks:
       - backend
-    volumes:
-      - ./redis:/data
     labels:
     - traefik.enable=false
 
