@@ -1,4 +1,5 @@
-nextcloud_app
-nextcloud_db
+nextcloud_app*
+nextcloud_db*
+redis*
 .env
 traefik/letsencrypt/*
