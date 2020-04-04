@@ -14,7 +14,7 @@ Note that the Nextcloud instance will work without it being reachable from the i
 ## Installation
 Copy .env.sample to .env and edit:
 
-    cp .env.sample .env
+    cp config-sample/.env-sample .env
     vi .env
 
 Create network web:
@@ -42,7 +42,7 @@ When the output above is shown, the nextcloud_app container is ready, however, w
     'overwrite.cli.url' => 'https://nextcloud.example.com',
     'overwritehost' => 'nextcloud.example.com',
     'overwriteprotocol' => 'https',
-*(See config-sample/config.php for an example.*)
+*(See config-sample/config.php-sample for an example.*)
 
 Next, restart the nextcloud_app container:
 
