@@ -1,0 +1,122 @@
+version: "3.3"
+
+# Til evt forbedringer:
+# https://techrevelations.de/2019/11/10/nextcloud-and-traefik-v2/
+# https://containo.us/blog/traefik-2-0-docker-101-fc2893944b9d/
+
+services:
+  traefik:
+    image: traefik:v2.0
+    restart: always
+    container_name: traefik
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    command:
+      # API settings
+      - --api.insecure=true
+      - --api.dashboard=true
+      - --api.debug=true
+      # Log Settings
+      - --log.level=DEBUG # <== Setting the level of the logs from traefik
+      # Provider Settings
+      - --providers.docker=true #
+      - --providers.docker.exposedbydefault=false 
+      - --providers.file.filename=/dynamic.yaml
+      - --providers.docker.network=web
+      
+      # Entrypoints
+      - --entrypoints.web.address=:80
+      - --entrypoints.web-secured.address=:443
+      # LetsEncrypt settings
+      - --certificatesresolvers.nextcloud-resolver.acme.tlschallenge=true
+      - --certificatesresolvers.nextcloud-resolver.acme.email=${LETSENCRYPT_EMAIL}
+      - --certificatesresolvers.nextcloud-resolver.acme.storage=/letsencrypt/acme.json
+      
+    volumes:
+      - ./traefik/letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/dynamic.yaml:/dynamic.yaml
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.api.service=api@internal"
+      
+  nextcloud_db:
+    container_name: nextcloud_db
+    image: postgres:latest
+    restart: always
+    volumes:
+      - ./nextcloud_db/data:/var/lib/postgresql/data
+    networks:
+      - backend
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=nextcloud_db
+      - POSTGRES_USER=nextcloud_db
+    labels:
+    - traefik.enable=false
+
+  nextcloud_app:
+    container_name: nextcloud_app
+    image: nextcloud
+    links:
+      - nextcloud_db
+    volumes:
+      - ./nextcloud_app/nextcloud:/var/www/html
+      - ./nextcloud_app/apps:/var/www/html/custom_apps
+      - ./nextcloud_app/config:/var/www/html/config
+      - ./nextcloud_app/data:/var/www/html/data
+    restart: always
+    networks:
+      - web
+      - backend
+    depends_on:
+      - nextcloud_db
+      - redis
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=nextcloud_db
+      - POSTGRES_USER=nextcloud_db
+      - POSTGRES_HOST=nextcloud_db
+      - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
+      - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
+      - NEXTCLOUD_TRUSTED_DOMAINS=${NEXTCLOUD_DOMAIN}
+      - REDIS_HOST=redis
+
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud-http-traffic.rule=Host(`${NEXTCLOUD_DOMAIN}`)"
+      - "traefik.http.routers.nextcloud-http-traffic.entrypoints=web"
+      - "traefik.http.routers.nextcloud-http-traffic.middlewares=redirect@file"
+      - "traefik.http.routers.nextcloud-https-traffic.rule=Host(`${NEXTCLOUD_DOMAIN}`)"
+      - "traefik.http.routers.nextcloud-https-traffic.entrypoints=web-secured"
+      - "traefik.http.routers.nextcloud-https-traffic.tls.certresolver=nextcloud-resolver"
+      - "traefik.http.middlewares.nextcloud-headers.headers.customFrameOptionsValue=SAMEORIGIN"
+      - "traefik.http.middlewares.nextcloud-headers.headers.framedeny=true"
+      - "traefik.http.middlewares.nextcloud-headers.headers.sslredirect=true"
+      - "traefik.http.middlewares.nextcloud-headers.headers.stsIncludeSubdomains=true"
+      - "traefik.http.middlewares.nextcloud-headers.headers.stsPreload=true"
+      - "traefik.http.middlewares.nextcloud-headers.headers.stsSeconds=15552000"
+      - "traefik.http.middlewares.nextcloud-dav.replacepathregex.regex=^/.well-known/ca(l|rd)dav"
+      - "traefik.http.middlewares.nextcloud-dav.replacepathregex.replacement=/remote.php/dav/"
+      - "traefik.http.routers.nextcloud-https-traffic.middlewares=nextcloud-headers,nextcloud-dav"
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    networks:
+      - backend
+    labels:
+    - traefik.enable=false
+
+      
+networks:
+  web:
+    external: true
+  backend:
+    external: false
