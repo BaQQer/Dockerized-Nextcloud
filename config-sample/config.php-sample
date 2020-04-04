@@ -1,0 +1,51 @@
+<?php
+$CONFIG = array (
+  'htaccess.RewriteBase' => '/',
+  'memcache.local' => '\\OC\\Memcache\\APCu',
+  'apps_paths' =>
+  array (
+    0 =>
+    array (
+      'path' => '/var/www/html/apps',
+      'url' => '/apps',
+      'writable' => false,
+    ),
+    1 =>
+    array (
+      'path' => '/var/www/html/custom_apps',
+      'url' => '/custom_apps',
+      'writable' => true,
+    ),
+  ),
+  'memcache.distributed' => '\\OC\\Memcache\\Redis',
+  'memcache.locking' => '\\OC\\Memcache\\Redis',
+  'redis' =>
+  array (
+    'host' => 'redis',
+    'password' => false,
+    'port' => 6379,
+  ),
+  'passwordsalt' => 'l123c7/dontbesaltyw',
+  'secret' => 'bEhSi6Uobigolsecret5Hd3ASD78587hdasZx',
+  'trusted_domains' =>
+  array (
+    0 => 'localhost',
+    1 => 'nextcloud.example.com',
+  ),
+  'datadirectory' => '/var/www/html/data',
+  'dbtype' => 'pgsql',
+  'version' => '18.0.2.2',
+  'dbname' => 'nextcloud_db',
+  'dbhost' => 'nextcloud_db',
+  'dbport' => '',
+  'dbtableprefix' => 'oc_',
+  'dbuser' => 'oc_admin',
+  'dbpassword' => '42yqasdatagreeneyessdad',
+  'installed' => true,
+  'instanceid' => 'oc3asdaninstanceid',
+  'default_language' => 'en',
+  'force_language' => 'en',
+  'overwrite.cli.url' => 'https://nextcloud.example.com',
+  'overwritehost' => 'nextcloud.example.com',
+  'overwriteprotocol' => 'https',
+);
