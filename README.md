@@ -12,7 +12,7 @@ Please note that two directories, nextcloud_app and nextcloud_db, are created, w
 Note that the Nextcloud instance will work without it being reachable from the internet, but Traefik will not be able to perform a LetsEncrypt TLS challenge and as such Nextcloud will work with a default Traefik SSL certificate (which will produce a browser warning).
 
 ## Installation
-Copy .env.sample to .env and edit:
+Copy config-sample/.env-sample to .env and edit:
 
     cp config-sample/.env-sample .env
     vi .env
