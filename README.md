@@ -2,7 +2,7 @@
 # Dockerized-Nextcloud
 Dockerized Nextcloud instance with PostgreSQL, Redis and Traefik (with LetsEncrypt) with minimum setup required. 
 
-Please note that two directories, nextcloud_app and nextcloud_db, are created, which contain the Nextcloud data and the database. These directories should be backed up!
+Please note that two directories, nextcloud_app and nextcloud_db, are created, which contain the Nextcloud data and the database. These directories should be backed up! Enable maintenance mode in Nextcloud before backing up in order to ensure the integrity of your database backup - see [Tips](#Tips) on how to enable it.
 
 ## Requirements
 
