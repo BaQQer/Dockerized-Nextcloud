@@ -1,6 +1,8 @@
 
 # Dockerized-Nextcloud
-Dockerized Nextcloud instance with PostgreSQL, Redis and Traefik (with LetsEncrypt) with minimum setup required. 
+Dockerized Nextcloud setup with separate containers for Nextcloud, PostgreSQL, Redis and Traefik (with LetsEncrypt) with minimum setup required using a single Docker-compose file.
+
+I made this to that it is simple and easy to deploy the stack to a new machine. It does not fit every use case, so use it for inspiration - CLI-based Traefik 2 configuration guides can be hard to come by!
 
 Please note that two directories, nextcloud_app and nextcloud_db, are created, which contain the Nextcloud data and the database. These directories should be backed up! Enable maintenance mode in Nextcloud before backing up in order to ensure the integrity of your database backup - see [Tips](#Tips) on how to enable it.
 
